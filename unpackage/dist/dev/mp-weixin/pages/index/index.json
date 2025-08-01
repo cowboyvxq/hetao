@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "photo-dialog": "/compontents/photo-dialog"
+  }
+}

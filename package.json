@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "weex-vue-render": "^0.10.3"
+  },
+  "scripts": {
+    "build:h5": "vue-cli-service uni-build --platform h5",
+    "dev:h5": "vue-cli-service uni-dev --platform h5"
+  },
+  "devDependencies": {
+    "@dcloudio/vue-cli-plugin-uni": "^2.0.2-4070520250711001"
+  }
+}
