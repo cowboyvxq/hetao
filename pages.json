@@ -6,6 +6,9 @@
 				"navigationStyle": "custom",
 				"app-plus": {
 					"bounce": "none"
+				},
+				"h5": {
+					"titleNView": false
 				}
 			}
 		}

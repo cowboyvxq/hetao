@@ -1,197 +1,220 @@
 <template>
   <view class="home">
     <view class="bg-photo">
-      <!-- <img src="../../static/bg/创新合作区地图1.png" /> -->
+      <view class="popup-box" v-if="this.showPopup" @click.stop="handlePopup">
+        <view class="tips">
+          <view>请旋转设备至横屏模式以获得最佳使用体验</view>
+        </view>
+      </view>
     </view>
-    <!-- 最顶层 -->
-    <!-- <div class="overstory"> -->
     <!-- 标题 -->
-    <div class="header">
-      <div class="sys-title">
+    <view class="header">
+      <view class="sys-title">
         <img src="../../static/images/长城.png" alt="" />
-      </div>
-      <div class="right-box" v-if="!showSwiper">
-        <div class="picture-box">
-          <div class="pic-icon" @click="handlePhoto">
+      </view>
+      <view class="right-box">
+        <view class="picture-box">
+          <view class="pic-icon" @click="handlePhoto">
             <span class="iconfont icon-tupian"></span>
-          </div>
-          <div
+          </view>
+          <view
             class="dialog-box"
             :class="showPhotoDialog ? 'show-dialog' : 'hide-dialog'"
           >
-            <div v-if="showPhotoDialog">
+            <view v-if="showPhotoDialog">
               <!-- 标题 -->
-              <div
+              <view
                 class="ht-title"
                 :class="showPhotoDialog ? 'show-title' : ''"
               >
                 河套规划图
-              </div>
+              </view>
               <!-- 关闭图标 -->
-              <div class="close" @click="handleClose">
-                <div class="iconfont icon-plus"></div>
-              </div>
-              <div class="project-pic">
+              <view class="close" @click="handleClose">
+                <view class="iconfont icon-plus"></view>
+              </view>
+              <view class="project-pic">
                 <img src="../../static/bg/河套规划图.png" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="route-box">
-          <div class="route-icon" @click="handleRoute">
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="route-box">
+          <view class="route-icon" @click="handleRoute">
             <span class="iconfont icon-a-02_luxian"></span>
-          </div>
-          <div
+          </view>
+          <view
             class="dialog-box"
             :class="showRouteDialog ? 'show-dialog' : 'hide-dialog'"
           >
-            <div v-if="showRouteDialog">
+            <view v-if="showRouteDialog">
               <!-- 标题 -->
-              <div
+              <view
                 class="ht-title"
                 :class="showRouteDialog ? 'show-title' : ''"
               >
                 园区公共交通
-              </div>
+              </view>
               <!-- 关闭图标 -->
-              <div class="close" @click="closeRoute">
-                <div class="iconfont icon-plus"></div>
-              </div>
-              <div class="route-bg">
+              <view class="close" @click="closeRoute">
+                <view class="iconfont icon-plus"></view>
+              </view>
+              <view class="route-bg">
                 <img src="../../static/bg/园区公共交通地图.png" />
-              </div>
+                <view class="canvas-box">
+                  <!-- <canvas canvas-id="lineCanvas" class="canvas"></canvas> -->
+                  <svg width="100%" height="300">
+                    <polyline
+                      :points="points.map((p) => `${p.x},${p.y}`).join(' ')"
+                      fill="none"
+                      stroke="#007AFF"
+                      stroke-width="2"
+                    />
+                    <circle
+                      v-for="(p, i) in points"
+                      :key="i"
+                      :cx="p.x"
+                      :cy="p.y"
+                      r="4"
+                      fill="#b795ff"
+                    />
+                  </svg>
+                </view>
+              </view>
               <!-- 站点蒙版 -->
-              <div
+              <view
                 class="mask-box"
                 :class="activeTab === 1 ? '' : 'right-mask'"
               >
-                <div class="list-content" v-if="activeTab === 1">
-                  <div
+                <view class="list-content" v-if="activeTab === 1">
+                  <view
                     class="list-item"
                     v-for="item in routeList1"
                     :key="item.id"
                   >
-                    <div>
-                      <div class="icon-item" v-if="item.icon === 1">
-                        <div class="thumbtack">
+                    <view>
+                      <view class="icon-item" v-if="item.icon === 1">
+                        <view class="thumbtack">
                           <span class="iconfont icon-map-thumbtack"></span>
-                        </div>
-                      </div>
-                      <div class="icon-item" v-else-if="item.icon === 2">
-                        <div class="draw-icon">
-                          <div class="circle">
-                            <div class="dot"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="icon-item" v-else></div>
-                    </div>
-                    <div>{{ item.name }}</div>
-                  </div>
-                </div>
-                <div class="list-content route2" v-else>
-                  <div
+                        </view>
+                      </view>
+                      <view class="icon-item" v-else-if="item.icon === 2">
+                        <view class="draw-icon">
+                          <view class="circle">
+                            <view class="dot"></view>
+                          </view>
+                        </view>
+                      </view>
+                      <view class="icon-item" v-else></view>
+                    </view>
+                    <view>{{ item.name }}</view>
+                  </view>
+                </view>
+                <view class="list-content route2" v-else>
+                  <view
                     class="list-item"
                     v-for="item in routeList2"
                     :key="item.id"
                   >
-                    <div>
-                      <div class="icon-item" v-if="item.icon === 1">
-                        <div class="thumbtack">
+                    <view>
+                      <view class="icon-item" v-if="item.icon === 1">
+                        <view class="thumbtack">
                           <span class="iconfont icon-map-thumbtack"></span>
-                        </div>
-                      </div>
-                      <div class="icon-item" v-else-if="item.icon === 2">
-                        <div class="draw-icon">
-                          <div class="circle">
-                            <div class="dot"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="icon-item" v-else></div>
-                    </div>
-                    <div>{{ item.name }}</div>
-                  </div>
-                </div>
-              </div>
+                        </view>
+                      </view>
+                      <view class="icon-item" v-else-if="item.icon === 2">
+                        <view class="draw-icon">
+                          <view class="circle">
+                            <view class="dot"></view>
+                          </view>
+                        </view>
+                      </view>
+                      <view class="icon-item" v-else></view>
+                    </view>
+                    <view>{{ item.name }}</view>
+                  </view>
+                </view>
+              </view>
               <!-- 右下角巴士图标 -->
-              <div class="tab-box">
-                <div
+              <view class="tab-box">
+                <view
                   class="bus-box"
                   @click="handleBus(1)"
                   :class="activeTab === 1 ? 'active_tab' : ''"
                 >
-                  <div class="iconfont icon-coach-full"></div>
-                  <div class="bus-name">C22</div>
-                </div>
-                <div
+                  <view class="iconfont icon-coach-full"></view>
+                  <view class="bus-name">C22</view>
+                </view>
+                <view
                   class="bus-box"
                   @click="handleBus(2)"
                   :class="activeTab === 2 ? 'active_tab' : ''"
                 >
-                  <div class="iconfont icon-coach-full"></div>
-                  <div class="bus-name">B962</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  <view class="iconfont icon-coach-full"></view>
+                  <view class="bus-name">B962</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
     <!-- 加号按钮 -->
-    <div class="plus-box">
-      <div
+    <view
+      class="plus-box"
+      :class="showPhotoDialog || showRouteDialog ? 'hide-plus' : ''"
+    >
+      <view
         class="plus-icon"
         :class="showMenu ? 'show_menu' : ''"
         @click="handlePlus"
       >
         <span class="iconfont icon-plus"></span>
         <!-- 菜单 -->
-        <!-- <div class="menu-box" :class="showMenu ? 'disappear' : ''"></div> -->
-        <div
+        <view
           class="menu-item menu1"
           @click.stop="handleShowSwiper"
           :class="showMenu ? 'show-item' : 'hide-item'"
         >
-          <span
+          <view
             class="iconfont icon-a-keyanjigouscientificresearchinstitution"
-          ></span>
-          <span :class="showMenu ? 'show-text' : 'hide-text'"
-            >高品质科研空间</span
-          >
-        </div>
-        <div
+          ></view>
+          <view :class="showMenu ? 'show-text' : 'hide-text'">
+            高品质科研空间
+          </view>
+        </view>
+        <view
           class="menu-item menu2"
           @click.stop="handleShowSwiper"
           :class="showMenu ? 'show-item' : 'hide-item'"
         >
-          <span class="iconfont icon-guojihua"></span>
-          <span :class="showMenu ? 'show-text' : 'hide-text'"
-            >国际化服务平台</span
-          >
-        </div>
-        <div
+          <view class="iconfont icon-guojihua"></view>
+          <view :class="showMenu ? 'show-text' : 'hide-text'">
+            国际化服务平台
+          </view>
+        </view>
+        <view
           class="menu-item menu3"
           :class="showMenu ? 'show-item' : 'hide-item'"
         >
-          <span class="iconfont icon-zhongyaodengji"></span>
-          <span :class="showMenu ? 'show-text' : 'hide-text'"
-            >高水平创新机构</span
-          >
-        </div>
-        <div
+          <view class="iconfont icon-zhongyaodengji"></view>
+          <view :class="showMenu ? 'show-text' : 'hide-text'">
+            高水平创新机构
+          </view>
+        </view>
+        <view
           class="menu-item menu4"
           :class="showMenu ? 'show-item' : 'hide-item'"
         >
-          <span class="iconfont icon-shangjia-shangjia"></span>
-          <span :class="showMenu ? 'show-text' : 'hide-text'"
-            >多元化生活配置</span
-          >
-        </div>
-      </div>
-    </div>
+          <view class="iconfont icon-shangjia-shangjia"></view>
+          <view :class="showMenu ? 'show-text' : 'hide-text'">
+            多元化生活配置
+          </view>
+        </view>
+      </view>
+    </view>
     <!-- 轮播图 -->
-    <div class="swiper-box" :class="showSwiper ? '' : 'hide-swiper'">
+    <view class="swiper-box" :class="showSwiper ? '' : 'hide-swiper'">
       <view class="con-part2-con">
         <swiper
           class="swiper-tall"
@@ -213,78 +236,77 @@
                 class="card-item"
                 :class="[partcurrentIndex === index ? 'active' : '']"
               >
-                <div class="item_pic">
+                <view class="item_pic">
                   <img :src="item.pic" alt="" />
-                </div>
-                <div class="introduction">
-                  <div class="item-tit">{{ item.title }}</div>
-                  <div class="item-desc">{{ item.desc }}</div>
-                </div>
+                </view>
+                <view class="introduction">
+                  <view class="item-tit">{{ item.title }}</view>
+                  <view class="item-desc">{{ item.desc }}</view>
+                </view>
               </view>
             </view>
           </swiper-item>
         </swiper>
       </view>
       <!-- 二级全屏页面 -->
-      <div class="full-box" :class="showFullScreen ? 'full_screen' : ''">
+      <view class="full-box" :class="showFullScreen ? 'full_screen' : ''">
         <!-- 返回 -->
-        <div
+        <view
           class="go_back"
           :class="showFullScreen ? 'show-back' : ''"
           @click="goBack"
         >
           <span class="iconfont icon-zuojiantou"></span>
-        </div>
+        </view>
         <!-- 右侧内容 -->
-        <div class="right-content">
-          <div class="company">
-            <div class="details">
-              <div class="c_name">河套科创中心</div>
-              <div class="adress">
+        <view class="right-content">
+          <view class="company">
+            <view class="details">
+              <view class="c_name">河套科创中心</view>
+              <view class="adress">
                 <span class="iconfont icon-daohangdizhi"></span>
                 <span>广东省深圳是福田区红花路1号</span>
-              </div>
-            </div>
-            <div class="operate">
-              <div class="handle_btn">
+              </view>
+            </view>
+            <view class="operate">
+              <view class="handle_btn">
                 <span class="iconfont icon-daohang"></span>
                 <span class="btn-val">立即前往</span>
-              </div>
-              <div class="handle_btn">
+              </view>
+              <view class="handle_btn">
                 <span class="iconfont icon-yidaka"></span>
                 <span class="btn-val">已打卡</span>
-              </div>
-            </div>
-          </div>
-          <div class="main-box">
-            <div class="project-tit">项目</div>
-            <div class="project-list">
-              <div class="sub-item" v-for="item in projectList" :key="item.id">
-                <div class="item_img">
+              </view>
+            </view>
+          </view>
+          <view class="main-box">
+            <view class="project-tit">项目</view>
+            <view class="project-list">
+              <view class="sub-item" v-for="item in projectList" :key="item.id">
+                <view class="item_img">
                   <img :src="item.img" alt="" />
-                </div>
-                <div class="item_desc">{{ item.desc }}</div>
-              </div>
-            </div>
-            <div class="view-more">
-              <div>查看全部</div>
-              <div class="iconfont icon-chakanquanbu"></div>
-            </div>
-          </div>
-          <div class="c-info">
-            <div class="c-info-tit">楼宇介绍</div>
-            <div class="c-info-text">
+                </view>
+                <view class="item_desc">{{ item.desc }}</view>
+              </view>
+            </view>
+            <view class="view-more">
+              <view>查看全部</view>
+              <view class="iconfont icon-chakanquanbu"></view>
+            </view>
+          </view>
+          <view class="c-info">
+            <view class="c-info-tit">楼宇介绍</view>
+            <view class="c-info-text">
               河套科创中心位于福田保税区红花路与瑞香道、紫荆道交叉口东侧，是河
               套深港科技创新合作区重点建设项目，按照“全球视野、国际标准、高点
               定位”建设目标实施。同时规划了多个公共活动区域和绿化休闲空间，将
               在打造符合合作区定位的高品质科技实验研发基地，成为展示深圳先行示
               范区城市建设新地标
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- </div> -->
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -296,11 +318,14 @@ export default {
   },
   data() {
     return {
+      isH5: false,
       activeTab: 1,
       showMenu: true,
       currentIndex: 3,
       showState: false,
+      showPopup: false,
       showSwiper: false,
+      isLandscape: false,
       showRouteDialog: false,
       showPhotoDialog: false,
       routeList1: [
@@ -404,22 +429,22 @@ export default {
       ],
       partSwiperChangeList: [
         {
-          pic: "../../static/images/f171fc5c85bd4564fadfd002ed4891f4.jpg",
+          pic: "/static/images/f171fc5c85bd4564fadfd002ed4891f4.jpg",
           title: "河套科创中心",
           desc: "国际一流生物科技研发基地",
         },
         {
-          pic: "../../static/images/becb0147638be209ec5e8efb6614d9dc.jpg",
+          pic: "/static/images/becb0147638be209ec5e8efb6614d9dc.jpg",
           title: "河套国创中心",
           desc: "河套合作区一体化国资产业创新平台",
         },
         {
-          pic: "../../static/images/6a37290f535479e9d745503d8a64ecb2.jpg",
+          pic: "/static/images/6a37290f535479e9d745503d8a64ecb2.jpg",
           title: "国际生物医药产业园二期",
           desc: "河套合作区首个政企合作改造的专业园区",
         },
         {
-          pic: "../../static/images/4446f518c15299786df5749b757a7934.jpg",
+          pic: "/static/images/4446f518c15299786df5749b757a7934.jpg",
           title: "深港国际科技园",
           desc: "湾区一流科技技术聚集高地",
         },
@@ -427,45 +452,120 @@ export default {
       projectList: [
         {
           id: 1,
-          img: "../../static/images/54db7f0d952c8743deb58e9438f872d5.png",
+          img: "/static/images/54db7f0d952c8743deb58e9438f872d5.png",
           desc: "国家药监局药品审评检查大湾区分中心",
         },
         {
           id: 2,
-          img: "../../static/images/1cb016bec90ee0976d54903f62b83b02.png",
+          img: "/static/images/1cb016bec90ee0976d54903f62b83b02.png",
           desc: "国家药监局医疗器械技术审评检查大湾区分中心",
         },
         {
           id: 3,
-          img: "../../static/images/88b335cd06591f9076dc834f6e113c24.png",
+          img: "/static/images/88b335cd06591f9076dc834f6e113c24.png",
           desc: "国家红树林中心",
         },
         {
           id: 4,
-          img: "../../static/images/b12ba330736d3a648df4b331112c4d88.png",
+          img: "/static/images/b12ba330736d3a648df4b331112c4d88.png",
           desc: "香港大学深圳研究院",
         },
         {
           id: 5,
-          img: "../../static/images/9819e8dd5fe2d59b9687f2ff48214648.png",
+          img: "/static/images/9819e8dd5fe2d59b9687f2ff48214648.png",
           desc: "香港科技大学深港协同创新研究院",
         },
         {
           id: 6,
-          img: "../../static/images/0bdd8ea2cf8c379d3f2190c951da243b.png",
+          img: "/static/images/0bdd8ea2cf8c379d3f2190c951da243b.png",
           desc: "香港君圣泰生物科技有限公司",
         },
       ],
       showFullScreen: false,
       partcurrentIndex: 0,
+      points: [
+        { x: 50, y: 60 }, // 起点（左上）
+        { x: 120, y: 90 },
+        { x: 90, y: 130 }, // 折返向下
+        { x: 160, y: 160 },
+        { x: 130, y: 200 }, // 再次折返
+        { x: 200, y: 240 },
+        { x: 170, y: 280 }, // 终点（右下）
+      ],
     };
   },
   onLoad() {},
-  onShow() {
-    // plus.screen.lockOrientation("landscape-primary");
-    // plus.navigator.setFullscreen(true);
+  mounted() {
+    // 判断是否为H5环境
+    this.isH5 = process.env.VUE_APP_PLATFORM === "h5";
+    // this.drawLines();
+    this.launchFullScreen();
+    this.checkOrientation();
   },
   methods: {
+    handlePopup() {
+      this.showPopup = false;
+    },
+    checkOrientation() {
+      if (this.isH5) {
+        this.isLandscape = window.innerWidth > window.innerHeight;
+        console.log("isLandscape-----", this.isLandscape);
+        if (!this.isLandscape) {
+          this.showPopup = true;
+        }
+      } else {
+        // 非H5环境依赖uniapp的横屏配置
+        this.isLandscape = true;
+      }
+    },
+    drawLines() {
+      const ctx = uni.createCanvasContext("lineCanvas");
+      // 清空画布
+      ctx.clearRect(0, 0, 1000, 1000);
+
+      // 设置线条样式
+      ctx.setStrokeStyle("#007AFF");
+      ctx.setLineWidth(20);
+
+      // 开始绘制路径
+      ctx.beginPath();
+      this.points.forEach((point, index) => {
+        if (index === 0) {
+          ctx.moveTo(point.x, point.y);
+        } else {
+          ctx.lineTo(point.x, point.y);
+        }
+      });
+
+      // 描边
+      ctx.stroke();
+
+      // 绘制点（可选）
+      this.points.forEach((point) => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
+        ctx.setFillStyle("#FFf800");
+        ctx.fill();
+      });
+      console.log("绘制了----");
+      // 提交到画布
+      ctx.draw();
+    },
+    launchFullScreen() {
+      let element = document.documentElement;
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        /* Firefox */
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) {
+        /* Chrome, Safari & Opera */
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        /* IE/Edge */
+        element.msRequestFullscreen();
+      }
+    },
     goBack() {
       this.showFullScreen = false;
     },
@@ -494,9 +594,12 @@ export default {
       this.showMenu = !this.showMenu;
     },
     handlePhoto() {
+      this.showMenu = false;
+      this.showSwiper = false;
       this.showPhotoDialog = !this.showPhotoDialog;
     },
     handleRoute() {
+      this.showMenu = false;
       this.showSwiper = false;
       console.log("34523423");
       this.showRouteDialog = !this.showRouteDialog;
@@ -543,12 +646,12 @@ export default {
   width: 100%;
   left: 0;
   top: 0;
-  top: 20px;
+  top: 10px;
   display: flex;
   position: fixed;
   justify-content: center;
   .sys-title {
-    height: 55px;
+    height: 40px;
     color: #fff;
     font-size: 38px;
     width: 50%;
@@ -572,19 +675,24 @@ export default {
     }
     .picture-box,
     .route-box {
-      // width: 50px;
-      // height: 50px;
-      // display: flex;
       border-radius: 50%;
       position: relative;
-      // align-items: center;
-      // background: #86a7ff;
-      background-image: linear-gradient( 135deg, #ABDCFF 10%, #0396FF 100%);
+      background-image: linear-gradient(135deg, #abdcff 10%, #0396ff 100%);
       // justify-content: center;
+      .canvas-box {
+        position: absolute;
+        right: 60px;
+        top: 20px;
+        .canvas {
+          display: block;
+          width: 400px;
+          height: 300px;
+        }
+      }
       .pic-icon,
       .route-icon {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         display: flex;
         border-radius: 50%;
         align-items: center;
@@ -592,13 +700,13 @@ export default {
       }
       .iconfont {
         color: #fff;
-        font-size: 35px;
+        font-size: 30px;
       }
       .dialog-box {
         width: 0;
         height: 0;
         opacity: 0;
-        z-index: 9999;
+        z-index: 99999;
         overflow: auto;
         position: fixed;
         transition: all 0.4s;
@@ -606,12 +714,12 @@ export default {
           position: fixed;
           left: 0;
           top: 0;
-          height: 60px;
+          height: 50px;
           width: 100vw;
           color: #fff;
-          font-size: 30px;
+          font-size: 22px;
           // font-size: ;
-          line-height: 60px;
+          line-height: 50px;
           text-align: center;
           transition: all 1s;
           text-shadow: -1px -1px 1px #fff, 1px 1px 1px #000;
@@ -630,6 +738,7 @@ export default {
           width: 100vw;
           height: 100vh;
           overflow: hidden;
+          position: relative;
           img {
             width: 100%;
             height: 100%;
@@ -637,8 +746,8 @@ export default {
           }
         }
         @mixin iconfn {
-          width: 30px;
-          height: 30px;
+          width: 25px;
+          height: 25px;
           display: flex;
           border-radius: 50%;
           align-items: center;
@@ -646,48 +755,50 @@ export default {
           justify-content: center;
         }
         .mask-box {
-          width: 280px;
+          width: 250px;
           // height: 80vh;
           left: 20px;
           top: 10vh;
           transition: all 0.5s;
           position: absolute;
           border-radius: 15px;
-          backdrop-filter: blur(3px);
-          background-color: rgba(255, 255, 255, 0.4);
+          backdrop-filter: blur(17px);
+          background-color: rgba(255, 255, 255, 0.6);
           .list-content {
             padding: 15px;
             .list-item {
               display: flex;
-              height: 50px;
-              font-size: 21px;
+              height: 34px;
+              font-size: 16px;
               align-items: center;
               .icon-item {
-                width: 45px;
-                height: 45px;
+                width: 40px;
+                height: 35px;
                 display: flex;
                 align-items: center;
                 .thumbtack {
                   @include iconfn();
+                  width: 23px;
+                  height: 23px;
                   .iconfont {
                     font-weight: bold;
                     color: #6938d3;
-                    font-size: 15px;
+                    font-size: 13px;
                   }
                 }
                 .draw-icon {
                   @include iconfn();
-                  padding: 5px;
-                  width: 28px;
-                  height: 28px;
+                  // padding: 3px;
+                  width: 23px;
+                  height: 23px;
                   background: #ccb8f8;
                   .circle {
                     padding: 3px;
                     border-radius: 50%;
-                    border: solid #6938d3 2px;
+                    border: solid #6938d3 1px;
                     .dot {
-                      width: 6px;
-                      height: 6px;
+                      width: 4px;
+                      height: 4px;
                       border-radius: 50%;
                       background: #6938d3;
                     }
@@ -704,15 +815,20 @@ export default {
           .route2 {
             padding: 8px 15px;
             .list-item {
-              font-size: 19px;
-              height: 37px;
+              font-size: 13px;
+              height: 25px;
               .icon-item {
-                height: 37px;
+                height: 25px;
+                .draw-icon {
+                  width: 21px;
+                  height: 21px;
+                }
               }
             }
           }
         }
         .right-mask {
+          width: 200px;
           top: 15px;
           left: 64% !important;
         }
@@ -720,15 +836,15 @@ export default {
           display: flex;
           // height: 0px;
           border-radius: 35px;
-          padding: 10px;
+          padding: 7px 10px;
           align-items: center;
           position: fixed;
           right: 30px;
-          bottom: 15px;
+          bottom: 10px;
           background: #fff;
           .bus-box {
-            height: 50px;
-            width: 120px;
+            height: 37px;
+            width: 110px;
             display: flex;
             font-size: 17px;
             color: #4264fb;
@@ -737,7 +853,7 @@ export default {
             transition: all 0.8s;
             justify-content: center;
             .iconfont {
-              font-size: 40px;
+              font-size: 35px;
               color: #4264fb;
             }
             .bus-name {
@@ -762,8 +878,8 @@ export default {
           z-index: 9999;
           position: fixed;
           .iconfont {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             display: flex;
             font-size: 28px;
             color: #020619;
@@ -794,19 +910,26 @@ export default {
   }
 }
 .plus-box {
-  top: calc(50vh - 30px);
-  left: 20px;
+  top: calc(50vh - 40px);
+  left: 15px;
   width: 60px;
   height: 60px;
   display: flex;
   position: absolute;
   align-items: center;
+  // transition: all 0.5s;
   box-sizing: border-box;
   justify-content: center;
 }
+.hide-plus {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
 .plus-icon {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   display: flex;
   font-weight: bold;
   border-radius: 50%;
@@ -833,28 +956,35 @@ export default {
     top: 0px;
     opacity: 0;
     z-index: 99;
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     color: #fff;
     display: flex;
     align-items: center;
     border-radius: 50%;
-    transition: all 0.7s;
+    transition: all 0.6s;
     position: absolute;
+    box-sizing: border-box;
     background: #7391ff;
     .iconfont {
       color: #fff;
-      font-size: 30px;
-      padding: 0 15px;
+      font-size: 25px;
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      // padding: 0 10px;
+      width: 50px;
+      height: 50px;
     }
   }
   .menu1 {
-    top: -100px !important;
+    top: -70px !important;
     left: 60px !important;
     background: #8581ff;
   }
   .menu2 {
-    top: -30px !important;
+    top: -10px !important;
     left: 100px !important;
     background: #73a8d2;
   }
@@ -864,20 +994,20 @@ export default {
     background: #81c4bf;
   }
   .menu4 {
-    top: 120px !important;
+    top: 110px !important;
     left: 60px !important;
     background: #c589d7;
   }
   .show-item {
     opacity: 1;
-    width: 200px;
+    width: 180px;
     border-radius: 30px;
     transition: width 1s ease-in-out 1s, border-radius 1s ease-in-out 0.6s,
       top 0.4s ease-in-out 0s, left 0.4s ease-in-out 0s,
       opacity 0.4s ease-in-out 0s;
     .show-text {
       opacity: 1;
-      font-size: 17px;
+      font-size: 14px;
       font-weight: 600;
       letter-spacing: 1px;
       transition: opacity 1s ease-in-out 2s;
@@ -888,7 +1018,7 @@ export default {
     left: 0 !important;
     transition: top 0.4s ease-in-out 1s, left 0.4s ease-in-out 1s,
       opacity 0.4s ease-in-out 0s;
-    width: 60px;
+    width: 50px;
     opacity: 0 !important;
     transition: all 1s;
     .hide-text {
@@ -898,8 +1028,8 @@ export default {
   }
 }
 .show_menu {
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   font-size: 28px;
   background: #fff;
   .icon-plus {
@@ -912,34 +1042,38 @@ export default {
   height: 150px;
   width: 100vw;
   right: 0px;
-  bottom: 20px;
+  bottom: 10px;
   overflow: hidden;
   transition: all 0.6s;
   ::v-deep.uni-swiper-slides {
     margin-left: 20vw;
   }
   .con-part2-con-container {
-    width: 72% !important;
-    height: 180px !important;
+    width: 66% !important;
+    height: 140px !important;
     // transform: translate(120%, 0px) translateZ(0px) !important;
   }
   .card-item {
     width: 35vw;
-    height: 100px;
+    height: 90px;
     display: flex;
     overflow: hidden;
     // background: #fff;
     border-radius: 20px;
     transform: scale(0.88);
+    box-sizing: border-box;
     border: solid #ffecb7 1px;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(5px);
     background-color: rgba(255, 255, 255, 0.6);
     .item_pic {
+      width: 80px;
+      height: 90px;
+      flex-shrink: 0;
       border-top-left-radius: 20px;
       border-bottom-left-radius: 20px;
       img {
-        width: 100px;
-        height: 100px;
+        width: 100%;
+        height: 100%;
         // border-radius: 20px;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
@@ -947,19 +1081,19 @@ export default {
       }
     }
     .introduction {
-      padding: 10px;
+      padding: 10px 6px;
       .item-tit {
         color: #040509;
-        font-size: 19px;
-        margin-bottom: 6px;
+        font-size: 14px;
+        margin-bottom: 4px;
         font-weight: bold;
-        line-height: 24px;
+        line-height: 20px;
         font-family: "Alfa Slab One", serif;
         // line-height: 40px;
       }
       .item-desc {
         color: #414245;
-        font-size: 17px;
+        font-size: 13px;
         line-height: 20px;
       }
     }
@@ -967,14 +1101,14 @@ export default {
   .active {
     transform: scale(1.02);
     width: calc(35vw * 1.02);
-    height: calc(110px * 1.02);
+    height: calc(90 * 1.02);
     transition: all 0.2s ease-in 0s;
     z-index: 20;
     img {
       border-top-left-radius: calc(20px * 1.02) !important;
       border-bottom-left-radius: calc(20px * 1.02) !important;
-      width: calc(110px * 1.02) !important;
-      height: calc(110px * 1.02) !important;
+      width: calc(90 * 1.02) !important;
+      height: calc(90 * 1.02) !important;
     }
   }
   .full-box {
@@ -1011,7 +1145,7 @@ export default {
     .right-content {
       top: 0;
       right: 0;
-      width: 60%;
+      width: 68%;
       height: 100vh;
       padding: 20px;
       overflow-y: auto;
@@ -1030,7 +1164,7 @@ export default {
             line-height: 35px;
           }
           .adress {
-            font-size: 14px;
+            font-size: 12px;
             color: #adb4b9;
             .icon-daohangdizhi {
               color: #2853af;
@@ -1051,10 +1185,11 @@ export default {
             border-radius: 20px;
             background: #e8f2ff;
             .iconfont {
-              font-size: 24px;
+              font-size: 23px;
               padding-right: 5px;
             }
             .btn-val {
+              font-size: 14px;
               font-weight: bold;
             }
           }
@@ -1064,7 +1199,7 @@ export default {
         margin-top: 15px;
         margin-bottom: 25px;
         .project-tit {
-          font-size: 20px;
+          font-size: 18px;
           margin-top: 20px;
           color: #171725;
           font-weight: bold;
@@ -1076,7 +1211,7 @@ export default {
           justify-content: space-between;
           .sub-item {
             width: 33%;
-            padding: 10px;
+            padding: 5px;
             text-align: center;
             box-sizing: border-box;
             .item_img {
@@ -1088,14 +1223,15 @@ export default {
               }
             }
             .item_desc {
-              font-size: 14px;
+              font-size: 12px;
               line-height: 22px;
             }
           }
         }
         .view-more {
-          height: 40px;
+          height: 35px;
           display: flex;
+          font-size: 14px;
           color: #7b90fe;
           font-weight: bold;
           align-items: center;
@@ -1103,7 +1239,7 @@ export default {
           .icon-chakanquanbu {
             width: 30px;
             margin-top: 5px;
-            font-size: 20px;
+            font-size: 19px;
             color: #7b90fe;
             font-weight: bold;
             text-align: center;
@@ -1113,16 +1249,16 @@ export default {
       }
       .c-info {
         .c-info-tit {
-          font-size: 20px;
+          font-size: 18px;
           color: #171725;
           font-weight: bold;
           margin-bottom: 15px;
         }
         .c-info-text {
-          font-size: 17px;
+          font-size: 13px;
           color: #66707a;
           font-weight: bold;
-          line-height: 25px;
+          line-height: 23px;
           // font-family: "Alfa Slab One", serif;
         }
       }
@@ -1168,6 +1304,31 @@ export default {
         padding-top: 12rpx;
       }
     }
+  }
+}
+
+.popup-box {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  z-index: 999999;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  .tips {
+    width: 75%;
+    padding: 20px;
+    color: #333;
+    height: 100px;
+    display: flex;
+    font-size: 20px;
+    line-height: 30px;
+    background: #fff;
+    align-items: center;
+    border-radius: 10px;
+    justify-content: center;
+    box-sizing: border-box;
   }
 }
 </style>
